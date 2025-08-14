@@ -1,12 +1,9 @@
 <template>
   <div class="container">
-    <h1>Gestão de Prêmios</h1>
-    <form @submit.prevent="createPremio" class="form-create">
-      <input type="text" v-model="newPremio.nome" placeholder="Nome do prêmio" required>
-      <input type="text" v-model="newPremio.descricao" placeholder="Descrição" required>
-      <input type="number" v-model="newPremio.anoEdicao" placeholder="Ano da Edição" required>
-      <button type="submit">Adicionar Prêmio</button>
-    </form>
+    <div class="header">
+      <h1>Gestão de Prêmios</h1>
+      <router-link to="/premios/novo" class="btn-new">Adicionar Prêmio</router-link>
+    </div>
     <table>
       <thead>
       <tr>
@@ -39,12 +36,7 @@ export default {
   name: 'PremiosView',
   data() {
     return {
-      premios: [],
-      newPremio: {
-        nome: '',
-        descricao: '',
-        anoEdicao: new Date().getFullYear()
-      }
+      premios: []
     };
   },
   methods: {
@@ -57,26 +49,16 @@ export default {
             console.error("Erro ao buscar prêmios:", error);
           });
     },
-    createPremio() {
-      ApiService.createPremio(this.newPremio)
-          .then(() => {
-            this.newPremio.nome = '';
-            this.newPremio.descricao = '';
-            this.newPremio.anoEdicao = new Date().getFullYear();
-            this.fetchPremios();
-          })
-          .catch(error => {
-            console.error("Erro ao criar prêmio:", error);
-          });
-    },
     deletePremio(id) {
-      ApiService.deletePremio(id)
-          .then(() => {
-            this.fetchPremios();
-          })
-          .catch(error => {
-            console.error("Erro ao deletar prêmio:", error);
-          });
+      if (confirm('Tem certeza que deseja deletar este prêmio?')) {
+        ApiService.deletePremio(id)
+            .then(() => {
+              this.fetchPremios();
+            })
+            .catch(error => {
+              console.error("Erro ao deletar prêmio:", error);
+            });
+      }
     }
   },
   created() {
@@ -87,17 +69,22 @@ export default {
 
 <style scoped>
 .container {
+  max-width: 1100px;
+  margin: 0 auto;
   padding: 2rem;
 }
-.form-create {
-  margin-bottom: 1.5rem;
+.header {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 500px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
-.form-create input {
-  padding: 0.5rem;
+.btn-new {
+  padding: 0.5rem 1rem;
+  background-color: #42b983;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
 }
 table {
   width: 100%;
@@ -110,6 +97,9 @@ th, td {
 button {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  align-self: flex-start;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 </style>

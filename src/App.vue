@@ -1,7 +1,8 @@
 <template>
   <div id="app">
     <nav>
-      <router-link to="/">Projetos</router-link> |
+      <router-link to="/">Início</router-link> |
+      <router-link to="/projetos">Projetos</router-link> |
       <router-link to="/autores">Autores</router-link> |
       <router-link to="/avaliadores">Avaliadores</router-link> |
       <router-link to="/premios">Prêmios</router-link>
@@ -21,14 +22,19 @@
 
 nav {
   padding: 30px;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
 }
 
 nav a {
   font-weight: bold;
   color: #2c3e50;
+  margin: 0 15px;
+  text-decoration: none;
 }
 
 nav a.router-link-exact-active {
   color: #42b983;
+  border-bottom: 2px solid #42b983;
 }
 </style>

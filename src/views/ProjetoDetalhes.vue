@@ -4,6 +4,15 @@
       <h2>{{ projeto.titulo }}</h2>
       <p><strong>Resumo:</strong> {{ projeto.resumo }}</p>
       <p><strong>Área Temática:</strong> {{ projeto.areaTematica }}</p>
+
+      <div v-if="projeto.autores && projeto.autores.length > 0" class="autores-list">
+        <p><strong>Autores:</strong>
+          <span v-for="(autor, index) in projeto.autores" :key="autor.id">
+            {{ autor.dadosPessoais }}{{ index < projeto.autores.length - 1 ? ', ' : '' }}
+          </span>
+        </p>
+      </div>
+
       <p><strong>Status:</strong> {{ projeto.status }}</p>
     </div>
 
@@ -51,7 +60,7 @@ import ApiService from '../services/ApiService';
 
 export default {
   name: 'ProjetoDetalhes',
-  props: ['id'], // Recebe o ID do projeto da rota
+  props: ['id'],
   data() {
     return {
       projeto: null,
@@ -67,15 +76,12 @@ export default {
   },
   methods: {
     fetchData() {
-      // Busca detalhes do projeto
       ApiService.getProjeto(this.id)
           .then(response => this.projeto = response.data)
           .catch(error => console.error("Erro ao buscar projeto:", error));
 
-      // Busca avaliações do projeto
       this.fetchAvaliacoes();
 
-      // Busca todos os avaliadores para o formulário
       ApiService.getAvaliadores()
           .then(response => this.todosAvaliadores = response.data)
           .catch(error => console.error("Erro ao buscar avaliadores:", error));
@@ -89,8 +95,7 @@ export default {
       ApiService.createAvaliacao(this.novaAvaliacao)
           .then(() => {
             alert('Avaliação submetida com sucesso!');
-            this.fetchAvaliacoes(); // Atualiza a lista de avaliações
-            // Limpa o formulário
+            this.fetchAvaliacoes();
             this.novaAvaliacao.avaliadorId = '';
             this.novaAvaliacao.nota = null;
             this.novaAvaliacao.parecer = '';
@@ -108,6 +113,8 @@ export default {
 
 <style scoped>
 .container {
+  max-width: 960px; /* Largura menor para melhor leitura */
+  margin: 0 auto;
   padding: 2rem;
   display: flex;
   flex-direction: column;
@@ -119,6 +126,9 @@ export default {
   border-radius: 8px;
   padding: 1.5rem;
   text-align: left;
+}
+.autores-list {
+  margin: 1rem 0;
 }
 .form-group {
   margin-bottom: 1rem;

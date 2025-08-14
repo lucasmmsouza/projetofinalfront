@@ -1,11 +1,9 @@
 <template>
   <div class="container">
-    <h1>Gestão de Avaliadores</h1>
-    <form @submit.prevent="createAvaliador" class="form-create">
-      <input type="text" v-model="newAvaliador.dadosPessoais" placeholder="Dados pessoais do avaliador" required>
-      <input type="text" v-model="newAvaliador.infoEspecificas" placeholder="Informações específicas" required>
-      <button type="submit">Adicionar Avaliador</button>
-    </form>
+    <div class="header">
+      <h1>Gestão de Avaliadores</h1>
+      <router-link to="/avaliadores/novo" class="btn-new">Adicionar Avaliador</router-link>
+    </div>
     <table>
       <thead>
       <tr>
@@ -36,11 +34,7 @@ export default {
   name: 'AvaliadoresView',
   data() {
     return {
-      avaliadores: [],
-      newAvaliador: {
-        dadosPessoais: '',
-        infoEspecificas: ''
-      }
+      avaliadores: []
     };
   },
   methods: {
@@ -53,25 +47,16 @@ export default {
             console.error("Erro ao buscar avaliadores:", error);
           });
     },
-    createAvaliador() {
-      ApiService.createAvaliador(this.newAvaliador)
-          .then(() => {
-            this.newAvaliador.dadosPessoais = '';
-            this.newAvaliador.infoEspecificas = '';
-            this.fetchAvaliadores();
-          })
-          .catch(error => {
-            console.error("Erro ao criar avaliador:", error);
-          });
-    },
     deleteAvaliador(id) {
-      ApiService.deleteAvaliador(id)
-          .then(() => {
-            this.fetchAvaliadores();
-          })
-          .catch(error => {
-            console.error("Erro ao deletar avaliador:", error);
-          });
+      if (confirm('Tem certeza que deseja deletar este avaliador?')) {
+        ApiService.deleteAvaliador(id)
+            .then(() => {
+              this.fetchAvaliadores();
+            })
+            .catch(error => {
+              console.error("Erro ao deletar avaliador:", error);
+            });
+      }
     }
   },
   created() {
@@ -82,17 +67,22 @@ export default {
 
 <style scoped>
 .container {
+  max-width: 1100px;
+  margin: 0 auto;
   padding: 2rem;
 }
-.form-create {
-  margin-bottom: 1.5rem;
+.header {
   display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-width: 500px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
-.form-create input {
-  padding: 0.5rem;
+.btn-new {
+  padding: 0.5rem 1rem;
+  background-color: #42b983;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
 }
 table {
   width: 100%;
@@ -105,6 +95,9 @@ th, td {
 button {
   padding: 0.5rem 1rem;
   cursor: pointer;
-  align-self: flex-start;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 </style>

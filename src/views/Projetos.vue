@@ -1,7 +1,9 @@
 <template>
   <div class="container">
-    <h1>Lista de Projetos</h1>
-    <router-link to="/projetos/novo" class="btn-new">Novo Projeto</router-link>
+    <div class="header">
+      <h1>Lista de Projetos</h1>
+      <router-link to="/projetos/novo" class="btn-new">Novo Projeto</router-link>
+    </div>
     <table>
       <thead>
       <tr>
@@ -32,7 +34,6 @@
 </template>
 
 <script>
-// O script continua o mesmo
 import ApiService from '../services/ApiService.js';
 
 export default {
@@ -55,7 +56,7 @@ export default {
     deleteProjeto(id) {
       ApiService.deleteProjeto(id)
           .then(() => {
-            this.fetchProjetos(); // Recarrega a lista
+            this.fetchProjetos();
           })
           .catch(error => {
             console.error("Erro ao deletar projeto:", error);
@@ -69,9 +70,16 @@ export default {
 </script>
 
 <style scoped>
-/* Os estilos continuam os mesmos */
 .container {
+  max-width: 1100px;
+  margin: 0 auto;
   padding: 2rem;
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
 table {
   width: 100%;
@@ -84,11 +92,18 @@ th, td {
 }
 .btn-new {
   display: inline-block;
-  margin-bottom: 1rem;
   padding: 0.5rem 1rem;
   background-color: #42b983;
   color: white;
   text-decoration: none;
+  border-radius: 4px;
+}
+button {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
   border-radius: 4px;
 }
 </style>

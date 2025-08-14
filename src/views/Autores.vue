@@ -1,10 +1,9 @@
 <template>
   <div class="container">
-    <h1>Gestão de Autores</h1>
-    <form @submit.prevent="createAutor" class="form-create">
-      <input type="text" v-model="newAutor.dadosPessoais" placeholder="Nome do novo autor" required>
-      <button type="submit">Adicionar Autor</button>
-    </form>
+    <div class="header">
+      <h1>Gestão de Autores</h1>
+      <router-link to="/autores/novo" class="btn-new">Adicionar Autor</router-link>
+    </div>
     <table>
       <thead>
       <tr>
@@ -33,10 +32,7 @@ export default {
   name: 'AutoresView',
   data() {
     return {
-      autores: [],
-      newAutor: {
-        dadosPessoais: ''
-      }
+      autores: []
     };
   },
   methods: {
@@ -49,24 +45,16 @@ export default {
             console.error("Erro ao buscar autores:", error);
           });
     },
-    createAutor() {
-      ApiService.createAutor(this.newAutor)
-          .then(() => {
-            this.newAutor.dadosPessoais = ''; // Limpa o campo
-            this.fetchAutores(); // Recarrega a lista
-          })
-          .catch(error => {
-            console.error("Erro ao criar autor:", error);
-          });
-    },
     deleteAutor(id) {
-      ApiService.deleteAutor(id)
-          .then(() => {
-            this.fetchAutores(); // Recarrega a lista
-          })
-          .catch(error => {
-            console.error("Erro ao deletar autor:", error);
-          });
+      if (confirm('Tem certeza que deseja deletar este autor?')) {
+        ApiService.deleteAutor(id)
+            .then(() => {
+              this.fetchAutores();
+            })
+            .catch(error => {
+              console.error("Erro ao deletar autor:", error);
+            });
+      }
     }
   },
   created() {
@@ -77,16 +65,22 @@ export default {
 
 <style scoped>
 .container {
+  max-width: 1100px;
+  margin: 0 auto;
   padding: 2rem;
 }
-.form-create {
-  margin-bottom: 1.5rem;
+.header {
   display: flex;
-  gap: 10px;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
 }
-.form-create input {
-  flex-grow: 1;
-  padding: 0.5rem;
+.btn-new {
+  padding: 0.5rem 1rem;
+  background-color: #42b983;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
 }
 table {
   width: 100%;
@@ -99,5 +93,9 @@ th, td {
 button {
   padding: 0.5rem 1rem;
   cursor: pointer;
+  background-color: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
 }
 </style>
